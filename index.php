@@ -42,7 +42,4 @@ if (!isset($_GET['id'])) {
         exit();//
     }
 }
-
-
-
 $db = null;
