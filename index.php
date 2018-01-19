@@ -39,7 +39,9 @@ if (!isset($_GET['id'])) {
         echo "{$print['date']}<br>";
     } catch (PDOException $e) {
         echo 'Операция не удалась: ' . $e->getMessage();
-        exit();
+        exit();//
     }
 }
+
+
 $db = null;
