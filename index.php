@@ -1,47 +1,56 @@
 <?php
-$dsn = 'mysql:host=127.0.0.1; dbname=blog1';
-$user = 'root';
-$password = '';
-
-try {
-    $db = new PDO($dsn, $user, $password);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $db->exec('SET NAMES utf8');
-} catch (PDOException $e) {
-    echo 'Подключение не удалось: ' . $e->getMessage();
-    exit();
+session_start();
+if (!isset($_SESSION['total'])) {
+    $_SESSION['total'] = 0;
 }
-
-
-//echo "Удача. Подключение с базой данных установлено.<br>";
-if (!isset($_GET['id'])) {
-    try {
-        $q = "SELECT * FROM article";
-        $r = $db->query($q);
-        while ($print = $r->fetch()) {
-            //echo "<pre>";
-            //var_dump($print);
-            //echo "<pre>";
-            echo "<h1><a href='index.php?id={$print["id"]}'>{$print['title']}</a></h1><br>";
-            echo "{$print['article']} <br>";
-            echo "{$print['date']} <hr>";
-
+if (isset($_REQUEST['delete'])) {
+    $_SESSION = [];
+}
+if (isset($_REQUEST['buy'])) {
+    foreach ($_REQUEST as $key=>$price) {
+        if ($key !== 'buy') {
+            $_SESSION[$key] = (int) $price;
+            $_SESSION['total'] += (int) $price;
         }
-    } catch (PDOException $e) {
-        echo 'Операция не удалась: ' . $e->getMessage();
-        exit();
-    }
-} else {
-    try {
-        $q = sprintf("SELECT * FROM article WHERE id='%d'", (int)$_GET['id']);
-        foreach ($r = $db->query($q) as $print);
-        //$print = $r->fetch();
-        echo "<h1>{$print['title']}</h1><br>";
-        echo "{$print['article']}<br>";
-        echo "{$print['date']}<br>";
-    } catch (PDOException $e) {
-        echo 'Операция не удалась: ' . $e->getMessage();
-        exit();//
     }
 }
-$db = null;
+//@var_dump($_SESSION);
+?>
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<h2 align="center">Магазин</h2>
+<form action="box.php">
+    <img src="img/box.jpeg" width="10%" align="right" alt="Корзина">
+    <p align="right"><button type="submit" name="box">Перейти в корзину</button></p>
+</form>
+
+<div>
+    <form id="5">
+        <input type="text" hidden name="buy">
+    </form>
+        <div>
+            <h2>Танк Т-72</h2>
+            <img src="img/setwalls.ru-29918.jpg" width="20%" alt="Танк Т-72">
+            <p>Цена: 50000000 р.</p>
+            <p><button type="submit" form="5" name="Танк Т-72" value="50000000">Добавить в корзину</button></p>
+        </div>
+    <div>
+        <h2>Танк Тигр</h2>
+        <img src="img/tiger.jpg" width="20%" alt="Танк Т-72">
+        <p>Цена: 30000000 р.</p>
+        <p><button type="submit" form="5" name="Танк Тигр" value="30000000">Добавить в корзину</button></p>
+    </div>
+
+</div>
+
+
+</body>
+</html>
